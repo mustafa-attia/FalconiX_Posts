@@ -1,11 +1,10 @@
 import axios from "axios";
-
-const baseURL = import.meta.env.VITE_BASE_URL;
+import { API_BASE_URL } from "./apiConfig";
 
 export async function getComments(postId: string) {
   const token = localStorage.getItem("token");
 
-  const { data } = await axios.get(`${baseURL}posts/${postId}/comments`, {
+  const { data } = await axios.get(`${API_BASE_URL}posts/${postId}/comments`, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
@@ -19,7 +18,7 @@ export async function CreateComment(postId: string, content: string) {
   const token = localStorage.getItem("token");
 
   const { data } = await axios.post(
-    `${baseURL}posts/${postId}/comments`,
+    `${API_BASE_URL}posts/${postId}/comments`,
     { content },
     {
       headers: {

@@ -1,11 +1,10 @@
 import axios from "axios";
 import type { RegisterFormType } from "../schema/register";
 import type { LoginFormType } from "../schema/login";
-
-const baseURL = import.meta.env.VITE_BASE_URL;
+import { API_BASE_URL } from "./apiConfig";
 
 export async function registerUser(formData: RegisterFormType) {
-  const data = await axios.post(`${baseURL}users/signup`, formData, {
+  const data = await axios.post(`${API_BASE_URL}users/signup`, formData, {
     headers: {
       "Content-Type": "application/json",
     },
@@ -15,7 +14,7 @@ export async function registerUser(formData: RegisterFormType) {
 }
 
 export async function loginUser(formData: LoginFormType) {
-  const data = await axios.post(`${baseURL}users/signin`, formData, {
+  const data = await axios.post(`${API_BASE_URL}users/signin`, formData, {
     headers: {
       "Content-Type": "application/json",
     },
@@ -37,7 +36,7 @@ export async function changePassword(payload: {
 }) {
   const token = localStorage.getItem("token");
   const { data } = await axios.patch<ChangePasswordResponse>(
-    `${baseURL}users/change-password`,
+    `${API_BASE_URL}users/change-password`,
     payload,
     {
       headers: {

@@ -1,6 +1,5 @@
 import axios from "axios";
-
-const baseURL = import.meta.env.VITE_BASE_URL;
+import { API_BASE_URL } from "./apiConfig";
 
 export type NotificationItem = {
   _id?: string;
@@ -89,7 +88,7 @@ export async function getNotifications({
   limit?: number;
 } = {}): Promise<NotificationsPage> {
   const token = localStorage.getItem("token");
-  const { data } = await axios.get<unknown>(`${baseURL}notifications`, {
+  const { data } = await axios.get<unknown>(`${API_BASE_URL}notifications`, {
     params: { unread, page, limit },
     headers: {
       Authorization: "Bearer " + token,
@@ -134,7 +133,7 @@ function readUnreadCount(payload: unknown): number | null {
 
 export async function getUnreadNotificationCount(): Promise<number> {
   const token = localStorage.getItem("token");
-  const { data } = await axios.get<unknown>(`${baseURL}notifications/unread-count`, {
+  const { data } = await axios.get<unknown>(`${API_BASE_URL}notifications/unread-count`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -156,7 +155,7 @@ export async function markNotificationAsRead(notificationId: string): Promise<vo
 
   const token = localStorage.getItem("token");
   await axios.patch(
-    `${baseURL}notifications/${encodeURIComponent(normalizedId)}/read`,
+    `${API_BASE_URL}notifications/${encodeURIComponent(normalizedId)}/read`,
     undefined,
     {
       headers: {
@@ -170,7 +169,7 @@ export async function markAllNotificationsAsRead(): Promise<void> {
   const token = localStorage.getItem("token");
 
   await axios.patch(
-    `${baseURL}notifications/read-all`,
+    `${API_BASE_URL}notifications/read-all`,
     undefined,
     {
       headers: {

@@ -1,11 +1,10 @@
-﻿import axios from "axios";
-
-const baseURL = import.meta.env.VITE_BASE_URL;
+import axios from "axios";
+import { API_BASE_URL } from "./apiConfig";
 
 export async function CreatePostAPI(formData: FormData) {
   const token = localStorage.getItem("token");
 
-  const { data } = await axios.post(`${baseURL}posts/`, formData, {
+  const { data } = await axios.post(`${API_BASE_URL}posts/`, formData, {
     headers: {
       Authorization: "Bearer " + token,
     },
@@ -17,7 +16,7 @@ export async function CreatePostAPI(formData: FormData) {
 export async function UpdatePostAPI(postId: string, formData: FormData) {
   const token = localStorage.getItem("token");
 
-  const { data } = await axios.put(`${baseURL}posts/${postId}`, formData, {
+  const { data } = await axios.put(`${API_BASE_URL}posts/${postId}`, formData, {
     headers: {
       Authorization: "Bearer " + token,
     },
@@ -29,7 +28,7 @@ export async function UpdatePostAPI(postId: string, formData: FormData) {
 export async function DeletePostAPI(postId: string) {
   const token = localStorage.getItem("token");
 
-  const { data } = await axios.delete(`${baseURL}posts/${postId}`, {
+  const { data } = await axios.delete(`${API_BASE_URL}posts/${postId}`, {
     headers: {
       Authorization: "Bearer " + token,
     },
@@ -42,7 +41,7 @@ export async function likePost(postId: string) {
   const token = localStorage.getItem("token");
 
   return axios.put(
-    `${baseURL}posts/${postId}/like`,
+    `${API_BASE_URL}posts/${postId}/like`,
     {},
     {
       headers: {
@@ -56,7 +55,7 @@ export async function sharePost(postId: string, body: string) {
   const token = localStorage.getItem("token");
 
   return axios.post(
-    `${baseURL}posts/${postId}/share`,
+    `${API_BASE_URL}posts/${postId}/share`,
     { body },
     {
       headers: {

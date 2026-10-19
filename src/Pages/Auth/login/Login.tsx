@@ -12,6 +12,16 @@ import { useContext } from "react";
 import { AuthContext } from "../../../context/AuthContext";
 import { getErrorMessage } from "../../../utils/errorMessage";
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function readAuthToken(payload: unknown): string | null {
+  if (!isRecord(payload)) return null;
+  if (typeof payload.token === "string" && payload.token.length > 0) return payload.token;
+  return isRecord(payload.data) ? readAuthToken(payload.data) : null;
+}
+
 export default function Login() {
 
   const navigate = useNavigate()
@@ -41,13 +51,17 @@ export default function Login() {
       // console.log(res.data?.data?.token);
 
       // localStorage.setItem("userToken", res.data.data.token);
-      const token = res.data?.data?.token;
-      if (typeof token !== "string" || !token) {
+      const responseData: unknown = res.data;
+      const token = readAuthToken(responseData);
+      if (!token) {
         throw new Error("Sign in succeeded without returning an authentication token.");
       }
-      updateToken(token)
+      updateToken(token);
 
-      toast.success(res.data.message || "Welcome back.");
+      const message = isRecord(responseData) && typeof responseData.message === "string"
+        ? responseData.message
+        : "Welcome back.";
+      toast.success(message);
       navigate("/");
       
     } catch (error) {

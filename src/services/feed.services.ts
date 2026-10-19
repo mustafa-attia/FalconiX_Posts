@@ -1,7 +1,6 @@
 import axios from "axios";
 import type { FeedPost } from "../types/feed.type";
-
-const baseURL = import.meta.env.VITE_BASE_URL;
+import { API_BASE_URL } from "./apiConfig";
 
 export type AllPostsPage = {
   posts: FeedPost[];
@@ -45,7 +44,7 @@ function readTotalPages(payload: unknown): number | null {
 export async function getAllPosts(page = 1, limit = 10): Promise<AllPostsPage> {
   const token = localStorage.getItem("token");
 
-  const { data } = await axios.get<unknown>(`${baseURL}posts`, {
+  const { data } = await axios.get<unknown>(`${API_BASE_URL}posts`, {
     params: { page, limit },
     headers: {
       "Content-Type": "application/json",
@@ -74,7 +73,7 @@ export async function getAllPosts(page = 1, limit = 10): Promise<AllPostsPage> {
 export async function getFeed() {
   const token = localStorage.getItem("token");
 
-  const { data } = await axios.get(`${baseURL}posts?limit=10`, {
+  const { data } = await axios.get(`${API_BASE_URL}posts?limit=10`, {
     headers: {
       "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,

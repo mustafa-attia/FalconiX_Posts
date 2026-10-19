@@ -1,10 +1,9 @@
 import axios from "axios";
-
-const baseURL = import.meta.env.VITE_BASE_URL;
+import { API_BASE_URL } from "./apiConfig";
 
 export async function getPostDetails(postId: string) {
   const token = localStorage.getItem("token");
-  const { data } = await axios.get(`${baseURL}posts/${postId}`, {
+  const { data } = await axios.get(`${API_BASE_URL}posts/${postId}`, {
     headers: {
       "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,

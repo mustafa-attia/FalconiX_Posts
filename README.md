@@ -9,7 +9,7 @@ This project is a Vite single-page application. Import the GitHub repository int
 - Output directory: `dist`
 - Install command: `npm install`
 
-Add `VITE_BASE_URL` in the Vercel project’s Environment Variables for Production, Preview, and Development. Set it to the API base URL, including a trailing slash. `.env.example` shows the variable name and current API base URL; local `.env*` files are excluded from Git.
+Add `VITE_BASE_URL` in the Vercel project’s Environment Variables for Production, Preview, and Development. Set it to `https://route-posts.routemisr.com/`, including the trailing slash, then redeploy so Vite rebuilds the client with the updated value. The app falls back to this API URL if the variable is missing; `.env.example` shows the variable name and URL. Local `.env*` files are excluded from Git.
 
 `vercel.json` rewrites application routes to the SPA entry point so direct navigation and refreshes work with React Router.
 
