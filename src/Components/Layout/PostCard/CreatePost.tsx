@@ -1,8 +1,10 @@
 import { ImageIcon, Send, X } from "lucide-react";
-import { useContext, useState, type FormEvent } from "react";
+import { useContext, useEffect, useState, type FormEvent } from "react";
 import { CreatePostAPI } from "../../../services/post.services";
 import { Spinner } from "@heroui/react";
 import { UserContext, type UserContextType } from "../../../context/UserContext";
+import toast from "react-hot-toast";
+import { getErrorMessage } from "../../../utils/errorMessage";
 
 export default function CreatePost({getPosts} :{getPosts:()=> void}) {
   const [content, setContent] = useState<string>("");
@@ -14,6 +16,10 @@ export default function CreatePost({getPosts} :{getPosts:()=> void}) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const userContext = useContext(UserContext) as UserContextType | null;
   const userDetails = userContext?.userDetails ?? null;
+
+  useEffect(() => () => {
+    if (imagePreview?.startsWith("blob:")) URL.revokeObjectURL(imagePreview);
+  }, [imagePreview]);
 
   function handleImage(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -47,8 +53,10 @@ export default function CreatePost({getPosts} :{getPosts:()=> void}) {
       setContent("");
       handleClosePreview();
       getPosts()
+      toast.success("Post created successfully.");
     } catch (error) {
       console.log(error);
+      toast.error(getErrorMessage(error, "Unable to create your post. Please try again."));
     } finally {
       setIsLoading(false);
     }
@@ -123,8 +131,8 @@ export default function CreatePost({getPosts} :{getPosts:()=> void}) {
           disabled={isLoading || (!content.trim() && !image)}
           className="primary-button disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {isLoading ? <Spinner size="lg" className="text-white" /> : "Create Post"}
-          <Send size={14} />
+          {isLoading ? <Spinner size="sm" className="text-white" /> : "Create Post"}
+          {!isLoading && <Send size={14} />}
         </button>
       </div>
     </form>

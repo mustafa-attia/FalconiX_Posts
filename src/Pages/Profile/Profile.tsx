@@ -7,6 +7,7 @@ import { getFeed } from "../../services/feed.services";
 import { getSavedBookmarkIds } from "../../services/post.services";
 import { getMyProfile, updateProfilePhoto } from "../../services/profile.services";
 import type { FeedPost } from "../../types/feed.type";
+import { getErrorMessage } from "../../utils/errorMessage";
 
 export default function Profile() {
   const userContext = useContext(UserContext) as UserContextType | null;
@@ -31,6 +32,7 @@ export default function Profile() {
       setSavedPosts(posts.filter((post: FeedPost) => getSavedBookmarkIds().includes(post._id)));
     } catch (error) {
       console.error("Error fetching profile posts:", error);
+      toast.error(getErrorMessage(error, "Unable to load your posts. Please try again."));
     } finally {
       setLoading(false);
     }
@@ -39,6 +41,11 @@ export default function Profile() {
   useEffect(() => {
     setPhotoPreview(userDetails?.photo ?? null);
   }, [userDetails?.photo]);
+
+  useEffect(() => {
+    if (!photoPreview?.startsWith("blob:")) return;
+    return () => URL.revokeObjectURL(photoPreview);
+  }, [photoPreview]);
 
   useEffect(() => {
     void refreshProfileData();
@@ -80,7 +87,7 @@ export default function Profile() {
       setPhotoPreview(data.user.photo ?? null);
       await refreshProfileData();
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Profile photo update is not available on the current backend.";
+      const message = getErrorMessage(error, "Unable to update your profile photo. Please try again.");
       toast.error(message);
       setPhotoError(message);
     } finally {

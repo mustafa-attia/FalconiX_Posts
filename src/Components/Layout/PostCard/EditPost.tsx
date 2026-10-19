@@ -1,6 +1,8 @@
 import { ImageIcon, Send, X } from "lucide-react";
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { UpdatePostAPI } from "../../../services/post.services";
+import toast from "react-hot-toast";
+import { getErrorMessage } from "../../../utils/errorMessage";
 
 export default function EditPost({
   postId,
@@ -18,11 +20,16 @@ export default function EditPost({
   const [content, setContent] = useState<string>(initialContent);
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(initialImage);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     setContent(initialContent);
     setImagePreview(initialImage);
   }, [initialContent, initialImage]);
+
+  useEffect(() => () => {
+    if (imagePreview?.startsWith("blob:")) URL.revokeObjectURL(imagePreview);
+  }, [imagePreview]);
 
   function handleImage(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -34,11 +41,13 @@ export default function EditPost({
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (isSubmitting || (!content.trim() && !image && !initialImage)) return;
 
     const trimmedContent = content.trim();
     const formData = new FormData();
 
     try {
+      setIsSubmitting(true);
       if (trimmedContent) {
         formData.append("body", trimmedContent);
       }
@@ -53,8 +62,12 @@ export default function EditPost({
       handleClosePreview();
       getPosts();
       setShowEditPost(false);
+      toast.success("Post updated successfully.");
     } catch (error) {
       console.log(error);
+      toast.error(getErrorMessage(error, "Unable to update your post. Please try again."));
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -128,10 +141,11 @@ export default function EditPost({
           </button>
           <button
             type="submit"
-            className="primary-button"
+            disabled={isSubmitting}
+            className="primary-button disabled:cursor-not-allowed disabled:opacity-60"
           >
-            Edit
-            <Send size={14} />
+            {isSubmitting ? "Saving..." : "Edit"}
+            {!isSubmitting && <Send size={14} />}
           </button>
         </div>
       </div>

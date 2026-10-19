@@ -4,6 +4,8 @@ import PostCard from "../../Components/Layout/PostCard/PostCard";
 import { getSavedBookmarkIds } from "../../services/post.services";
 import { getFeed } from "../../services/feed.services";
 import type { FeedPost } from "../../types/feed.type";
+import toast from "react-hot-toast";
+import { getErrorMessage } from "../../utils/errorMessage";
 
 export default function SavedPosts() {
   const [posts, setPosts] = useState<FeedPost[]>([]);
@@ -17,6 +19,7 @@ export default function SavedPosts() {
       setPosts(filtered);
     } catch (error) {
       console.error("Error fetching saved posts:", error);
+      toast.error(getErrorMessage(error, "Unable to load saved posts. Please try again."));
     } finally {
       setLoading(false);
     }

@@ -3,6 +3,7 @@ import { Eye, EyeOff, LockKeyhole, ShieldCheck } from "lucide-react";
 import toast from "react-hot-toast";
 import { changePassword } from "../../services/auth.services";
 import { AuthContext } from "../../context/AuthContext";
+import { getErrorMessage } from "../../utils/errorMessage";
 
 const defaultValues = {
   currentPassword: "",
@@ -32,8 +33,14 @@ export default function ChangePassword() {
       return;
     }
 
-    if (form.newPassword.length < 6) {
-      toast.error("New password should contain at least 6 characters.");
+    if (
+      form.newPassword.length < 8 ||
+      !/[a-z]/.test(form.newPassword) ||
+      !/[A-Z]/.test(form.newPassword) ||
+      !/\d/.test(form.newPassword) ||
+      !/[^A-Za-z0-9]/.test(form.newPassword)
+    ) {
+      toast.error("Use 8+ characters with uppercase, lowercase, a number, and a special character.");
       return;
     }
 
@@ -56,8 +63,7 @@ export default function ChangePassword() {
       toast.success("Password updated successfully.");
       setForm(defaultValues);
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Unable to update password.";
-      toast.error(message);
+      toast.error(getErrorMessage(error, "Unable to update your password. Please try again."));
     } finally {
       setIsSubmitting(false);
     }

@@ -6,6 +6,8 @@ import type { FeedPost } from "../../types/feed.type";
 import { getFeed } from "../../services/feed.services";
 import { PostSkeleton } from "../../Components/Layout/PostCard/PostSkeleton";
 import CreatePost from "../../Components/Layout/PostCard/CreatePost";
+import toast from "react-hot-toast";
+import { getErrorMessage } from "../../utils/errorMessage";
 
 export default function Feed() {
   const [posts, setPosts] = useState<FeedPost[]>([]);
@@ -21,6 +23,7 @@ export default function Feed() {
       if (axios.isAxiosError(error)) {
         console.error("Error fetching posts:", error.response?.data?.message || error.message);
       }
+      toast.error(getErrorMessage(error, "Unable to load posts. Please try again."));
     }finally {
       setLoading(false);
     }

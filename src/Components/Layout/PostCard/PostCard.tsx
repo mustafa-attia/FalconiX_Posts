@@ -9,6 +9,7 @@ import { CreateComment, getComments } from "../../../services/comments.services"
 import { UserContext, type UserContextType } from "../../../context/UserContext";
 import EditPost from "./EditPost";
 import { DeletePostAPI, isPostBookmarked, likePost, sharePost, toggleSavedBookmark } from "../../../services/post.services";
+import { getErrorMessage } from "../../../utils/errorMessage";
 
 export default function PostCard({ post, getPosts }: { post: FeedPost; getPosts: () => void }) {
   const [comments, setComments] = useState<FeedComment[]>([]);
@@ -63,7 +64,7 @@ export default function PostCard({ post, getPosts }: { post: FeedPost; getPosts:
       await getPostComments(post._id);
     } catch (error) {
       console.error("Error creating comment:", error);
-      toast.error("Unable to add comment right now.");
+      toast.error(getErrorMessage(error, "Unable to add comment right now."));
     } finally {
       setIsSubmittingComment(false);
     }
@@ -81,7 +82,7 @@ export default function PostCard({ post, getPosts }: { post: FeedPost; getPosts:
       toast.success("Post deleted successfully.");
     } catch (error) {
       console.error("Error deleting post:", error);
-      toast.error("You do not have permission to delete this post or the server rejected the request.");
+      toast.error(getErrorMessage(error, "Unable to delete this post."));
     }
   }
 
@@ -100,7 +101,7 @@ export default function PostCard({ post, getPosts }: { post: FeedPost; getPosts:
       console.error("Error toggling like:", error);
       setLiked(!nextLikedState);
       setLikeCount((current) => Math.max(0, current + (nextLikedState ? -1 : 1)));
-      toast.error("Unable to update like state.");
+      toast.error(getErrorMessage(error, "Unable to update your like."));
     } finally {
       setIsLiking(false);
     }
@@ -126,7 +127,7 @@ export default function PostCard({ post, getPosts }: { post: FeedPost; getPosts:
       await getPosts();
     } catch (error) {
       console.error("Error sharing post:", error);
-      toast.error("Unable to share this post right now.");
+      toast.error(getErrorMessage(error, "Unable to share this post right now."));
     } finally {
       setIsSharing(false);
     }
@@ -140,7 +141,7 @@ export default function PostCard({ post, getPosts }: { post: FeedPost; getPosts:
       toast.success("Post link copied to clipboard.");
     } catch (error) {
       console.error("Error copying link:", error);
-      toast.error("Unable to copy the post link.");
+      toast.error(getErrorMessage(error, "Unable to copy the post link."));
     }
   }
 

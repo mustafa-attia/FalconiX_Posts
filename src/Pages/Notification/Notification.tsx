@@ -4,6 +4,7 @@ import { Bell, CheckCheck } from "lucide-react";
 import toast from "react-hot-toast";
 import { NotificationCountContext } from "../../context/NotificationCountContext";
 import { markAllNotificationsAsRead } from "../../services/notification.services";
+import { getErrorMessage } from "../../utils/errorMessage";
 
 export default function Notification() {
   const notificationContext = useContext(NotificationCountContext);
@@ -21,7 +22,7 @@ export default function Notification() {
       toast.success("All notifications marked as read.");
     } catch (error) {
       console.error("Error marking notifications as read:", error);
-      toast.error("Unable to mark notifications as read.");
+      toast.error(getErrorMessage(error, "Unable to mark notifications as read."));
     } finally {
       setIsMarkingRead(false);
     }

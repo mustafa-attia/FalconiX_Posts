@@ -13,6 +13,8 @@ import { Link, useParams } from "react-router";
 import { getPostDetails } from "../../services/postDetails.services";
 import type { FeedComment, FeedPost } from "../../types/feed.type";
 import { CreateComment, getComments } from "../../services/comments.services";
+import toast from "react-hot-toast";
+import { getErrorMessage } from "../../utils/errorMessage";
 
 function PostDetails() {
   const { id } = useParams();
@@ -28,6 +30,7 @@ function PostDetails() {
       setDetails(data.post);
     } catch (error) {
       console.error("Error fetching post details:", error);
+      toast.error(getErrorMessage(error, "Unable to load this post."));
     }
   }
 
@@ -42,6 +45,7 @@ function PostDetails() {
         await getPostComments(id!);
       } catch (error) {
         console.error("Error creating comment:", error);
+        toast.error(getErrorMessage(error, "Unable to add your comment."));
       }
     }
 
@@ -52,12 +56,14 @@ function PostDetails() {
       setComments(data.comments);
     } catch (error) {
       console.error("Error fetching comments:", error);
+      toast.error(getErrorMessage(error, "Unable to load comments for this post."));
     }
   }
 
   useEffect(() => {
-    fetchPostDetails(id!);
-    getPostComments(id!);
+    if (!id) return;
+    void fetchPostDetails(id);
+    void getPostComments(id);
   }, [id]);
 
   function handleMoreComments() {
