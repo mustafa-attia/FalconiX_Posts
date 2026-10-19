@@ -4,6 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext, type UserContextType } from "../../../context/UserContext";
 import { NotificationCountContext } from "../../../context/NotificationCountContext";
+import { AuthContext } from "../../../context/AuthContext";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -18,9 +19,10 @@ export default function Navbar() {
   const userDetails = userContext?.userDetails ?? null;
   const notificationContext = useContext(NotificationCountContext);
   const unreadCount = notificationContext?.unreadCount ?? null;
+  const { updateToken } = useContext(AuthContext);
 
   function logout() {
-    localStorage.removeItem("token");
+    updateToken(null);
     navigate("/auth/login");
   }
 

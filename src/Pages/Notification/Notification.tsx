@@ -9,6 +9,7 @@ import { getErrorMessage } from "../../utils/errorMessage";
 export default function Notification() {
   const notificationContext = useContext(NotificationCountContext);
   const unreadCount = notificationContext?.unreadCount ?? null;
+  const unreadCountError = notificationContext?.unreadCountError ?? null;
   const [isMarkingRead, setIsMarkingRead] = useState(false);
 
   async function handleMarkAllAsRead() {
@@ -44,7 +45,7 @@ export default function Notification() {
         <div className="flex flex-wrap items-center gap-3">
           <p className="text-sm text-[color:var(--muted)]" aria-live="polite">
             {unreadCount === null
-              ? "Checking unread notifications..."
+              ? unreadCountError ?? "Checking unread notifications..."
               : unreadCount === 0
                 ? "You’re all caught up."
                 : `${unreadCount} unread ${unreadCount === 1 ? "notification" : "notifications"}`}

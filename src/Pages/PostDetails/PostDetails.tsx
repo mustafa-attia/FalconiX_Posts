@@ -19,7 +19,7 @@ import { getErrorMessage } from "../../utils/errorMessage";
 function PostDetails() {
   const { id } = useParams();
   const [details, setDetails] = useState<FeedPost | null>(null);
-  const [comments, setComments] = useState<FeedComment[] | []>([]);
+  const [comments, setComments] = useState<FeedComment[]>([]);
   const [visibleComments, setVisibleComments] = useState(1);
   const [content, setContent] = useState<string>("");
 
@@ -27,6 +27,9 @@ function PostDetails() {
     try {
       const { data } = await getPostDetails(postId);
       // console.log(data.post);
+      if (!data?.post) {
+        throw new Error("The post details response did not include a post.");
+      }
       setDetails(data.post);
     } catch (error) {
       console.error("Error fetching post details:", error);
@@ -37,12 +40,11 @@ function PostDetails() {
     async function handleCommentSubmit(e: FormEvent<HTMLFormElement>) {
       e.preventDefault();
   
-      if (!content.trim()) return;
+      if (!id || !content.trim()) return;
       try {
-        const { data } = await CreateComment(id!, content.trim());
-        console.log(data);
+        await CreateComment(id, content.trim());
         setContent("");
-        await getPostComments(id!);
+        await getPostComments(id);
       } catch (error) {
         console.error("Error creating comment:", error);
         toast.error(getErrorMessage(error, "Unable to add your comment."));
@@ -52,8 +54,8 @@ function PostDetails() {
   async function getPostComments(postId: string) {
     try {
       const { data } = await getComments(postId);
-      console.log(data.comments);
-      setComments(data.comments);
+      // console.log(data.comments);
+      setComments(Array.isArray(data?.comments) ? data.comments : []);
     } catch (error) {
       console.error("Error fetching comments:", error);
       toast.error(getErrorMessage(error, "Unable to load comments for this post."));
@@ -101,10 +103,12 @@ function PostDetails() {
               </div>
               <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-[color:var(--muted)]">
                 <span>
-                  {new Date(details?.createdAt!).toLocaleString("en-us", {
-                    timeStyle: "short",
-                    dateStyle: "full",
-                  })}
+                  {details?.createdAt
+                    ? new Date(details.createdAt).toLocaleString("en-us", {
+                        timeStyle: "short",
+                        dateStyle: "full",
+                      })
+                    : ""}
                 </span>
                 <span aria-hidden="true">·</span>
                 <Globe2 aria-label="Public" size={13} />
@@ -233,12 +237,12 @@ function PostDetails() {
                         {details?.topComment?.content}
                       </p>
                       <span className="mt-1 block text-[11px] text-[#778185]">
-                        {new Date(
-                          details?.topComment?.createdAt!,
-                        ).toLocaleString("en-us", {
-                          timeStyle: "short",
-                          dateStyle: "full",
-                        })}
+                        {details?.topComment?.createdAt
+                          ? new Date(details.topComment.createdAt).toLocaleString("en-us", {
+                              timeStyle: "short",
+                              dateStyle: "full",
+                            })
+                          : ""}
                       </span>
                     </div>
                   </div>

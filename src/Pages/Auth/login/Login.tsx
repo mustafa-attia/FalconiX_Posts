@@ -31,14 +31,14 @@ export default function Login() {
 
 
   async function submitForm(values: LoginFormType) {
-    console.log(values);
+    // console.log(values);
 
     try {
       const res = await loginUser(values);
-      console.log(res);
-      console.log(res.data?.message);
+      // console.log(res);
+      // console.log(res.data?.message);
 
-      console.log(res.data?.data?.token);
+      // console.log(res.data?.data?.token);
 
       // localStorage.setItem("userToken", res.data.data.token);
       const token = res.data?.data?.token;
@@ -52,7 +52,7 @@ export default function Login() {
       
     } catch (error) {
 
-      console.log(error);
+      // console.log(error);
       toast.error(getErrorMessage(error, "Unable to sign in. Please check your details and try again."));
     }
   }

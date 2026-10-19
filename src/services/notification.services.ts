@@ -42,12 +42,30 @@ export async function getUnreadNotificationCount(): Promise<number> {
   return count;
 }
 
+export async function markNotificationAsRead(notificationId: string): Promise<void> {
+  const normalizedId = notificationId.trim();
+  if (!normalizedId) {
+    throw new Error("A notification ID is required.");
+  }
+
+  const token = localStorage.getItem("token");
+  await axios.patch(
+    `${baseURL}notifications/${encodeURIComponent(normalizedId)}/read`,
+    undefined,
+    {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    },
+  );
+}
+
 export async function markAllNotificationsAsRead(): Promise<void> {
   const token = localStorage.getItem("token");
 
   await axios.patch(
     `${baseURL}notifications/read-all`,
-    {},
+    undefined,
     {
       headers: {
         Authorization: `Bearer ${token}`,

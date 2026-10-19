@@ -32,7 +32,7 @@ export default function UserContextProvider({children} : {children :React.ReactN
                 if (isCurrentRequest) setUserDetails(data.user)
             })
             .catch((error) => {
-                console.log(error)
+                // console.log(error)
                 if (isCurrentRequest) {
                     toast.error(getErrorMessage(error, "Unable to load your profile. Please try again."))
                 }

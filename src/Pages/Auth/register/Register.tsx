@@ -36,14 +36,14 @@ export default function Register() {
   });
 
   async function submitForm(values: RegisterFormType) {
-    console.log(values);
+    // console.log(values);
     // setErrorMsg("");
     // setSuccessMsg("");
 
     try {
       const res = await registerUser(values);
-      console.log(res);
-      console.log(res.data?.message);
+      // console.log(res);
+      // console.log(res.data?.message);
       // setSuccessMsg(res.data.message);
       toast.success(res.data?.message || "Your account has been created.");
 
@@ -53,7 +53,7 @@ export default function Register() {
 
     } catch (error) {
 
-      console.log(error);
+      // console.log(error);
       toast.error(getErrorMessage(error, "Unable to create your account. Please try again."));
     }
   }

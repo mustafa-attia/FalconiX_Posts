@@ -46,16 +46,16 @@ export default function CreatePost({getPosts} :{getPosts:()=> void}) {
         formData.append("image", image);
       }
 
-      const { data } = await CreatePostAPI(formData);
+      await CreatePostAPI(formData);
 
-      console.log(data);
+      // console.log(data);
 
       setContent("");
       handleClosePreview();
       getPosts()
       toast.success("Post created successfully.");
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast.error(getErrorMessage(error, "Unable to create your post. Please try again."));
     } finally {
       setIsLoading(false);

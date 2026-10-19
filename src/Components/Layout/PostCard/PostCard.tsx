@@ -169,7 +169,7 @@ export default function PostCard({ post, getPosts }: { post: FeedPost; getPosts:
             <MoreHorizontal size={20} />
           </Button>
           <Dropdown.Popover>
-            <Dropdown.Menu onAction={(key) => console.log(`Selected: ${key}`)}>
+            <Dropdown.Menu>
               {post.user._id === userDetails?._id && (
                 <>
                   <Dropdown.Item id="edit-post" onClick={() => setShowEditPost(true)} textValue="Edit post">
@@ -300,7 +300,7 @@ export default function PostCard({ post, getPosts }: { post: FeedPost; getPosts:
                         <MoreHorizontal size={18} />
                       </Button>
                       <Dropdown.Popover>
-                        <Dropdown.Menu onAction={(key) => console.log(`Selected: ${key}`)}>
+                        <Dropdown.Menu>
                           <Dropdown.Item id="edit-comment" textValue="Edit comment"><Label>Edit Comment</Label></Dropdown.Item>
                           <Dropdown.Item id="delete-comment" textValue="Delete comment" variant="danger"><Label>Delete Comment</Label></Dropdown.Item>
                         </Dropdown.Menu>
@@ -331,7 +331,7 @@ export default function PostCard({ post, getPosts }: { post: FeedPost; getPosts:
                         <MoreHorizontal size={18} />
                       </Button>
                       <Dropdown.Popover>
-                        <Dropdown.Menu onAction={(key) => console.log(`Selected: ${key}`)}>
+                        <Dropdown.Menu>
                           <Dropdown.Item id="edit-comment" textValue="Edit comment"><Label>Edit Comment</Label></Dropdown.Item>
                           <Dropdown.Item id="delete-comment" textValue="Delete comment" variant="danger"><Label>Delete Comment</Label></Dropdown.Item>
                         </Dropdown.Menu>

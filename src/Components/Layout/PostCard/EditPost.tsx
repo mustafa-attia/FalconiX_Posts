@@ -64,7 +64,7 @@ export default function EditPost({
       setShowEditPost(false);
       toast.success("Post updated successfully.");
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast.error(getErrorMessage(error, "Unable to update your post. Please try again."));
     } finally {
       setIsSubmitting(false);
