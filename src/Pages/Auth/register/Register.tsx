@@ -171,6 +171,7 @@ export default function Register() {
             aria-describedby={errors.password ? "register-password-error" : undefined}
             className="min-h-[52px] rounded-2xl border border-[#dce7e2] bg-[#f3f7f5] text-[#1d302d] placeholder:text-[#71817d] focus-within:border-[#78aa9c] focus-within:ring-4 focus-within:ring-[#287a6b]/10"
           />
+          <p className="text-xs text-[color:var(--muted)]">Use at least 8 characters. No special character requirements.</p>
           {errors.password && <p id="register-password-error" className="text-xs font-medium text-[#cf4e49]">{errors.password.message}</p>}
         </div>
 
