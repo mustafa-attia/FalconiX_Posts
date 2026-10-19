@@ -1,3 +1,4 @@
+import axios from "axios";
 import { Button, Input, Spinner } from "@heroui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {  useForm } from "react-hook-form";
@@ -10,7 +11,6 @@ import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../../services/auth.services";
 import { useContext } from "react";
 import { AuthContext } from "../../../context/AuthContext";
-import { getErrorMessage } from "../../../utils/errorMessage";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
@@ -20,6 +20,30 @@ function readAuthToken(payload: unknown): string | null {
   if (!isRecord(payload)) return null;
   if (typeof payload.token === "string" && payload.token.length > 0) return payload.token;
   return isRecord(payload.data) ? readAuthToken(payload.data) : null;
+}
+
+function loginErrorMessage(error: unknown): string {
+  if (!axios.isAxiosError(error)) {
+    return "We couldn’t sign you in. Please try again.";
+  }
+
+  if (!error.response) {
+    return "We couldn’t connect right now. Check your connection and try again.";
+  }
+
+  if (error.response.status === 401 || error.response.status === 403) {
+    return "Your email or password doesn’t match. Check your details and try again.";
+  }
+
+  if (error.response.status === 429) {
+    return "Too many sign-in attempts. Please wait a moment and try again.";
+  }
+
+  if (error.response.status >= 500) {
+    return "Sign-in is temporarily unavailable. Please try again shortly.";
+  }
+
+  return "We couldn’t sign you in. Please check your details and try again.";
 }
 
 export default function Login() {
@@ -67,7 +91,7 @@ export default function Login() {
     } catch (error) {
 
       // console.log(error);
-      toast.error(getErrorMessage(error, "Unable to sign in. Please check your details and try again."));
+      toast.error(loginErrorMessage(error));
     }
   }
 
